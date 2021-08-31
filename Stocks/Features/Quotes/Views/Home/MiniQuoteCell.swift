@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MiniQuoteCell: View {
     
-    @ObservedObject var stockQuotes: MockQuoteManager //StockQuoteManager
+    @ObservedObject var stockQuotes: StockQuoteManager
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -39,6 +39,6 @@ struct MiniQuoteCell: View {
 
 struct MiniQuoteCell_Previews: PreviewProvider {
     static var previews: some View {
-        MiniQuoteCell(stockQuotes: MockQuoteManager())
+        MiniQuoteCell(stockQuotes: StockQuoteManager())
     }
 }

@@ -31,6 +31,7 @@ struct QuoteCell: View {
             }
         }
     }
+
 }
 
 struct QuoteCell_Previews: PreviewProvider {

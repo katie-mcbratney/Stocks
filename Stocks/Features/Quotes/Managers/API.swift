@@ -17,7 +17,9 @@ struct API {
     }
     
     static func quoteUrl(for searchKey: String) -> String {
-        return urlBy(symbol: .quote, searchKey: searchKey)
+        let url =  urlBy(symbol: .quote, searchKey: searchKey)
+        print(url)
+        return url
     }
     
     private static func urlBy(symbol: SymbolFunction, searchKey: String) -> String {

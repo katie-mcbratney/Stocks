@@ -9,9 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @ObservedObject var stockManager = MockQuoteManager() //StockQuoteManager()
+    @ObservedObject var stockManager = StockQuoteManager()
+    @ObservedObject var newsManager = NewsDownloadManager()
     
-    @State private var stocks = ["AAPL", "GOOG"]
+    @State private var stocks = UserDefaultsManager.shared.savedSymbols
     @State private var searchTerm = ""
     @State private var newsOpen = false
     @State private var oldStocks = [String]()
@@ -48,22 +49,32 @@ struct ContentView: View {
                         
                         ForEach(getQuotes()) { quote in
                             QuoteCell(quote: quote)
-                        }
-                    }.background(Color.clear)
-                    .listRowBackground(Color.clear)
+                        }//.onDelete(perform: deleteItems)
+                    }.listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets())
                 }.onAppear {
                     fetchData(for: stocks)
                     oldStocks = stocks
                 }.onChange(of: stocks, perform: { value in
-                    //fetchData(for: stocks)
+                    fetchData(for: stocks.difference(from: oldStocks))
+                    oldStocks = stocks
                 })
                 .listStyle(PlainListStyle())
                 .foregroundColor(.white)
             }.padding(.horizontal, 32)
             .padding(.bottom, UIScreen.main.bounds.height * 0.21)
+            
+            NewsSheetView(newsOpen: $newsOpen, newsManager: newsManager)
+            
         }.edgesIgnoringSafeArea(.all)
     }
+    
+//    private func deleteItems(at offsets: IndexSet) {
+//        oldStocks.remove(atOffsets: offsets)
+//        UserDefaultsManager.shared.delete(at: offsets)
+//
+//        //stocks.remove(atOffsets: offsets)
+//    }
     
     private func getQuotes() -> [Quote] {
         return searchTerm.isEmpty ? stockManager.quotes : stockManager.quotes.filter {
@@ -73,7 +84,6 @@ struct ContentView: View {
     
     private func fetchData(for symbols: [String]) {
         stockManager.download(stocks: symbols){_ in}
-        
     }
     
 }
